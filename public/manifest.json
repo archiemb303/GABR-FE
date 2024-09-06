@@ -1,0 +1,35 @@
+{
+  "short_name": "Tenant Owner",
+  "name": "Tenant Owner",
+  "icons": [
+    {
+      "src": "/assets/images/tenantLogo144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/tenant-logo-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/tenant-logo-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/tenant-logo-284x284.png",
+      "sizes": "284x284",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/images/tenant-logo-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
