@@ -17,6 +17,11 @@ import {
   RadioGroup,
   TextField,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import { Container, useTheme } from "@mui/system";
 import { H4 } from "app/components/Typography";
@@ -43,34 +48,26 @@ import { convertHexToRGB } from "app/utils/utils";
 import CloseIcon from "@mui/icons-material/Close";
 import AddPropertyImages from "./components/AddPropertyImages";
 
+
+
 const InputField = styled(TextField)(() => ({ marginBottom: "16px" }));
 
 const AddNewPropertyListing = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
   const location = useSelector((state) => state.location);
   const { addNewProperty } = useSelector((state) => state.property);
   const [imageList, setImageList] = useState([]);
-  const furnishing_details = [
-    {
-      furnishing_description: "semi-furnished homes",
-      furnishing_id: 2,
-      furnishing_name: "Semi-Furnished",
-      is_selected: 1,
-    },
-    {
-      furnishing_description: "unfurnished homes",
-      furnishing_id: 3,
-      furnishing_name: "Unfurnished",
-      is_selected: 0,
-    },
-    {
-      furnishing_description: "fully furnished homes",
-      furnishing_id: 1,
-      furnishing_name: "Fully Furnished",
-      is_selected: 0,
-    },
-  ];
+  
+  // useEffect(()=>{
+  //   dispatch(createNewBrand());
+  // },[])
+  // const { nature_of_business, target_countries } = useSelector(state=>state.brandSpecific);
+  // // console.log(brandSpecific);
+  // const business_details = [
+  //   {id:1, name:"b2b"},{id:2, name:"b2c"}
+  // ];
 
   const { GET_ALL_CITIES_BY_STATE, ADD_NEW_PROPERTY } = useSelector(
     (state) => state.loadingAndError.loader
@@ -94,7 +91,9 @@ const AddNewPropertyListing = () => {
     halls: "",
     coveredParkings: "",
     openParkings: "",
-    furnishing_id: "",
+    business_id: "",
+    country: "",
+    description: "",
   };
 
   // 🛑 FOR DEBUGGING ONLY  - can be deleted
@@ -119,7 +118,7 @@ const AddNewPropertyListing = () => {
   // };
 
   const validationSchema = Yup.object().shape({
-    propertyName: Yup.string().required("Property Name is required field"),
+    propertyName: Yup.string().required("Brand Name is required field"),
     pincode: Yup.string()
       .required("Pincode is required field")
       .typeError("Pincode should only contain digits")
@@ -129,12 +128,14 @@ const AddNewPropertyListing = () => {
       ),
     state_id: Yup.string().required("State is required field"),
     city_id: Yup.string().required("City is required field"),
-    addressLine1: Yup.string().required("Address Line 1 is required field"),
+    addressLine1: Yup.string().required("Industry is required field"),
     // .max(30, "Address Line 1 should be between 0 to 30 characters"),
-    addressLine2: Yup.string().required("Address Line 2 is required field"),
+    addressLine2: Yup.string().required("Competitors is required field"),
     // .max(15, "Address Line 2 should be between 0 to 15 characters"),
-    addressLine3: Yup.string().required("Locality is required field"),
+    addressLine3: Yup.string().required("Target Clients is required field"),
     // .max(25, "Locality should be between 0 to 25 characters"),
+    country: Yup.string().required("Target Country is required field"),
+    description: Yup.string().required("Target Country is required field"),
     userStatus: Yup.string()
       .oneOf(["1", "2", "3", "4"])
       .required("Please select one from the above"),
@@ -157,7 +158,7 @@ const AddNewPropertyListing = () => {
       .required("Covered parkings is a required field")
       .matches(/^[0-9][0-9]*$/, "Only positive numbers are allowed"),
     propertyType: Yup.string().required("Property type is required field"),
-    furnishing_id: Yup.number().required("Furnishing id is required field"),
+    business_id: Yup.number().required("business id is required field"),
 
     // firstName: Yup.string()
     //     .min(3, 'Must be greater then 3 characters')
@@ -190,51 +191,68 @@ const AddNewPropertyListing = () => {
     },
     background: isDragActive ? "rgb(0, 0, 0, 0.15)" : "rgb(0, 0, 0, 0.01)",
   }));
-  const handleSubmit = async (values, { isSubmitting }) => {
+
+  // Function to open the modal
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  // Function to close the modal
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSubmit = async (values, /*{ isSubmitting }*/) => {
     // console.log(values);
-    dispatch(
-      addNewPropertyAction({
-        property_name: values.propertyName,
-        address_line_1: values.addressLine1,
-        address_line_2: values.addressLine2,
-        address_line_3: values.addressLine3,
-        pincode: new String(values.pincode),
-        creator_type: parseInt(values.userStatus, 10),
-        city_id: values.city_id,
-        property_type: values.propertyType,
-        location_coordinates_x: 12.7681,
-        location_coordinates_y: 77.1234,
-        // status: "2",
-        space_details: [
-          {
-            space_id: 1,
-            space_count: parseInt(values.rooms, 10),
-          },
-          {
-            space_id: 2,
-            space_count: parseInt(values.kitchens, 10),
-          },
-          {
-            space_id: 3,
-            space_count: parseInt(values.balconies, 10),
-          },
-          {
-            space_id: 4,
-            space_count: parseInt(values.halls, 10),
-          },
-          {
-            space_id: 5,
-            space_count: parseInt(values.coveredParkings, 10),
-          },
-          {
-            space_id: 6,
-            space_count: parseInt(values.openParkings, 10),
-          },
-        ],
-        image: imageList[0],
-        furnishing_type: values.furnishing_id,
-      })
-    );
+    // dispatch(
+
+    // )
+    navigate("/property");
+    //dispatch(
+      //here add api call for adding brand
+    //   addNewPropertyAction({
+    //     property_name: values.propertyName,
+    //     address_line_1: values.addressLine1,
+    //     address_line_2: values.addressLine2,
+    //     address_line_3: values.addressLine3,
+    //     pincode: new String(values.pincode),
+    //     creator_type: parseInt(values.userStatus, 10),
+    //     city_id: values.city_id,
+    //     property_type: values.propertyType,
+    //     location_coordinates_x: 12.7681,
+    //     location_coordinates_y: 77.1234,
+    //     // status: "2",
+    //     space_details: [
+    //       {
+    //         space_id: 1,
+    //         space_count: parseInt(values.rooms, 10),
+    //       },
+    //       {
+    //         space_id: 2,
+    //         space_count: parseInt(values.kitchens, 10),
+    //       },
+    //       {
+    //         space_id: 3,
+    //         space_count: parseInt(values.balconies, 10),
+    //       },
+    //       {
+    //         space_id: 4,
+    //         space_count: parseInt(values.halls, 10),
+    //       },
+    //       {
+    //         space_id: 5,
+    //         space_count: parseInt(values.coveredParkings, 10),
+    //       },
+    //       {
+    //         space_id: 6,
+    //         space_count: parseInt(values.openParkings, 10),
+    //       },
+    //     ],
+    //     image: imageList[0],
+    //     business_type: values.business_id,
+    //   })
+    // );
+    
   };
   const style = {
     // position: "absolute",
@@ -260,6 +278,7 @@ const AddNewPropertyListing = () => {
         })
       );
     }
+    
   }, []);
 
   useEffect(() => {
@@ -308,6 +327,7 @@ const AddNewPropertyListing = () => {
     }
   }, [acceptedFiles]);
 
+
   return (
     <>
       <Typography
@@ -317,7 +337,7 @@ const AddNewPropertyListing = () => {
         textAlign="center"
         sx={{ color: "#0c5389" }}
       >
-        Let's start by adding a few details about your property
+        Let's start by adding a few details about your Brand
       </Typography>
       <Card
         sx={{
@@ -360,7 +380,7 @@ const AddNewPropertyListing = () => {
                     <TextField
                       sx={{ mr: 1 }}
                       name="propertyName"
-                      label="Property Name"
+                      label="Brand Name"
                       variant="outlined"
                       size="small"
                       fullWidth
@@ -375,6 +395,213 @@ const AddNewPropertyListing = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
+                      sx={{ mr: 1 }}
+                      name="addressLine1"
+                      label="Industry"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      value={values.addressLine1}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      helperText={touched.addressLine1 && errors.addressLine1}
+                      error={Boolean(
+                        touched.addressLine1 && errors.addressLine1
+                      )}
+                    />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField
+                      sx={{ mr: 1 }}
+                      name="addressLine2"
+                      label="Competitors"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      value={values.addressLine2}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      helperText={touched.addressLine2 && errors.addressLine2}
+                      error={Boolean(
+                        touched.addressLine2 && errors.addressLine2
+                      )}
+                    />
+                  </Grid>
+
+                  {/* <Grid item xs={12}>
+                    <TextField
+                      select
+                      sx={{ mr: 1 }}
+                      name="business_id"
+                      label="business Type"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      value={values.business_id}
+                      onChange={(e) => {
+                        setFieldValue("business_id", e.target.value);
+                      }}
+                      helperText={touched.business_id && errors.business_id}
+                      error={Boolean(
+                        touched.business_id && errors.business_id
+                      )}
+                    // onChange={(e) => {
+                    //   // handleChange(e);
+                    //   setFieldValue("propertyType", e.target.value);
+                    // }}
+                    //   onBlur={handleBlur}
+                    //   helperText={touched.propertyType && errors.propertyType}
+                    //   error={Boolean(
+                    //     touched.propertyType && errors.propertyType
+                    //   )}
+                    >
+                      {nature_of_business?.map((item) => {
+                        return (
+                          <MenuItem
+                            key={item.id}
+                            value={item.id}
+                          >
+                            {item.name}
+                          </MenuItem>
+                        );
+                      })}
+                    </TextField>
+                  </Grid> */}
+
+
+                  <Grid item xs={12}>
+                    <TextField
+                      sx={{ mr: 1 }}
+                      name="addressLine3"
+                      label="Target Clients"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      value={values.addressLine3}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      helperText={touched.addressLine3 && errors.addressLine3}
+                      error={Boolean(
+                        touched.addressLine3 && errors.addressLine3
+                      )}
+                    />
+                  </Grid>
+
+                  {/* <Grid item xs={12}>
+                    <TextField
+                      select
+                      sx={{ mr: 1 }}
+                      name="country"
+                      label="Target Countries"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      value={values.country}
+                      onChange={(e) => {
+                        setFieldValue("country", e.target.value);
+                      }}
+                      helperText={touched.country && errors.country}
+                      error={Boolean(
+                        touched.country && errors.country
+                      )}
+                    // onChange={(e) => {
+                    //   // handleChange(e);
+                    //   setFieldValue("propertyType", e.target.value);
+                    // }}
+                    //   onBlur={handleBlur}
+                    //   helperText={touched.propertyType && errors.propertyType}
+                    //   error={Boolean(
+                    //     touched.propertyType && errors.propertyType
+                    //   )}
+                    >
+                      {target_countries?.map((item) => {
+                        return (
+                          <MenuItem
+                            key={item.id}
+                            value={item.id}
+                          >
+                            {item.name}
+                          </MenuItem>
+                        );
+                      })}
+                    </TextField>
+                  </Grid> */}
+
+                  {/* <Grid item xs={12}>
+                    <TextField
+                      sx={{ mr: 1 }}
+                      name="country"
+                      label="Target Countries"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      value={values.country}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      helperText={touched.country && errors.country}
+                      error={Boolean(
+                        touched.country && errors.country
+                      )}
+                    />
+                  </Grid> */}
+                  <Grid item xs={12}>
+                    <TextField
+                      sx={{ mr: 1, minHeight: "120px" }} // Adjust the height using minHeight
+                      name="description"
+                      label="Description"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      multiline
+                      rows={4} // Set the number of rows to increase the height
+                      value={values.description}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      helperText={touched.description && errors.description}
+                      error={Boolean(touched.description && errors.description)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} display="flex" justifyContent="center">
+                    <Button
+                      disabled={ADD_NEW_PROPERTY?.isLoading}
+                      variant="contained"
+                      color="primary"
+                      // type="submit"
+                      onClick={handleClickOpen}
+                    >
+                      Proceed
+                    </Button>
+                  </Grid>
+
+                  {/* Modal (Dialog) Implementation */}
+                  <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>{"Confirm Your Details"}</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText>
+                        {"WE will generate a brief understanding of your brand and industry ( < 200 characters). Once you are feel that description is satisfactory, you can proceed to generate the detail reports"}
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose} color="primary">
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          handleSubmit();
+                          handleClose(); 
+                          navigate("/property") // Close modal after submit
+                        }}
+                        color="primary"
+                        variant="contained"
+                        type="submit"
+                      >
+                        Proceed
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                  {/* <Grid item xs={12}>
+                    <TextField
                       type="number"
                       sx={{ mr: 1 }}
                       name="pincode"
@@ -388,9 +615,9 @@ const AddNewPropertyListing = () => {
                       helperText={touched.pincode && errors.pincode}
                       error={Boolean(touched.pincode && errors.pincode)}
                     />
-                  </Grid>
+                  </Grid> */}
 
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     <TextField
                       select
                       required
@@ -462,62 +689,10 @@ const AddNewPropertyListing = () => {
                           </MenuItem>
                         ))}
                     </TextField>
-                  </Grid>
+                  </Grid> */}
 
-                  <Grid item xs={12}>
-                    <TextField
-                      sx={{ mr: 1 }}
-                      name="addressLine1"
-                      label="Address Line 1"
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      value={values.addressLine1}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      helperText={touched.addressLine1 && errors.addressLine1}
-                      error={Boolean(
-                        touched.addressLine1 && errors.addressLine1
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      sx={{ mr: 1 }}
-                      name="addressLine2"
-                      label="Address Line 2"
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      value={values.addressLine2}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      helperText={touched.addressLine2 && errors.addressLine2}
-                      error={Boolean(
-                        touched.addressLine2 && errors.addressLine2
-                      )}
-                    />
-                  </Grid>
 
-                  <Grid item xs={12}>
-                    <TextField
-                      sx={{ mr: 1 }}
-                      name="addressLine3"
-                      label="Locality"
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      value={values.addressLine3}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      helperText={touched.addressLine3 && errors.addressLine3}
-                      error={Boolean(
-                        touched.addressLine3 && errors.addressLine3
-                      )}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     <TextField
                       select
                       sx={{ mr: 1 }}
@@ -548,58 +723,20 @@ const AddNewPropertyListing = () => {
                         </MenuItem>
                       ))}
                     </TextField>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      select
-                      sx={{ mr: 1 }}
-                      name="furnishing_id"
-                      label="Furnishing Type"
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      value={values.furnishing_id}
-                      onChange={(e) => {
-                        setFieldValue("furnishing_id", e.target.value);
-                      }}
-                      helperText={touched.furnishing_id && errors.furnishing_id}
-                      error={Boolean(
-                        touched.furnishing_id && errors.furnishing_id
-                      )}
-                      // onChange={(e) => {
-                      //   // handleChange(e);
-                      //   setFieldValue("propertyType", e.target.value);
-                      // }}
-                      //   onBlur={handleBlur}
-                      //   helperText={touched.propertyType && errors.propertyType}
-                      //   error={Boolean(
-                      //     touched.propertyType && errors.propertyType
-                      //   )}
-                    >
-                      {furnishing_details.map((item) => {
-                        return (
-                          <MenuItem
-                            key={item.furnishing_id}
-                            value={item.furnishing_id}
-                          >
-                            {item.furnishing_name}
-                          </MenuItem>
-                        );
-                      })}
-                    </TextField>
-                  </Grid>
+                  </Grid> */}
 
-                  <Grid item xs={12}>
+
+                  {/* <Grid item xs={12}>
                     <FormLabel
                       sx={{ color: "text.primary" }}
                       id="demo-row-radio-buttons-group-label"
                     >
                       Please provide count of each space:
                     </FormLabel>
-                  </Grid>
+                  </Grid> */}
 
                   {/* <Grid container spacing={2}> */}
-                  <Grid container item xs={12} spacing={2}>
+                  {/* <Grid container item xs={12} spacing={2}>
                     <Grid item xs={12} md={6}>
                       <TextField
                         type="number"
@@ -699,10 +836,10 @@ const AddNewPropertyListing = () => {
                         )}
                       />
                     </Grid>
-                  </Grid>
+                  </Grid> */}
                   {/* </Grid> */}
 
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     <FormLabel
                       sx={{ color: "text.primary" }}
                       id="demo-row-radio-buttons-group-label"
@@ -746,31 +883,24 @@ const AddNewPropertyListing = () => {
                         </Box>
                       ) : null}
                     </RadioGroup>
-                  </Grid>
-                  <Grid item xs={12}>
+                  </Grid> */}
+                  {/* <Grid item xs={12}>
                     <AddPropertyImages
                       label="Add Property Image:"
                       imageList={imageList}
                       setImageList={setImageList}
                     />
-                  </Grid>
+                  </Grid> */}
 
-                  <Grid item xs={12} display="flex" justifyContent="center">
-                    <Button
-                      disabled={ADD_NEW_PROPERTY?.isLoading}
-                      variant="contained"
-                      color="primary"
-                      type="submit"
-                    >
-                      Proceed
-                    </Button>
-                  </Grid>
+
                 </Grid>
               </Box>
             </Form>
           )}
         </Formik>
       </Card>
+
+
     </>
   );
 };

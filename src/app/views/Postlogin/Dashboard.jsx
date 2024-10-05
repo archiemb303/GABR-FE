@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { Box, Container, styled, useTheme } from "@mui/system";
 import { H3, Paragraph } from "app/components/Typography";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { dashboardNavigations } from "app/navigations";
 import {
@@ -28,6 +28,8 @@ import DashboardVideoModal from "./DashboardVideoModal";
 import { setDashboardVideoModal } from "app/redux/actions/ModalActions";
 import { height } from "@mui/system";
 import Loading from "app/components/MatxLoading";
+import { testApiAction } from "app/redux/actions/TestApiActions";
+import { async } from "@firebase/util";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -59,16 +61,16 @@ const Dashboard = () => {
     // },
 
     {
-      title: "Get Rental Agreement",
+      title: "Brand Specific Research Portal:",
       description:
-        "Create Standardized and Customizable rent agreements on e-stamp papers with e-signing.",
+        "For companies,investors, and researchers that want to do an industry research particular to their offerings. Research scope includes but is not limited to",
       icon: "assignment_icon",
-      path: "/property/addNewPropertyListing",
+      path: "/property",
     },
     {
-      title: "Manage My Properties",
+      title: "Manage My Brands",
       description:
-        "Search tenants, sign rent agreements, manage documents, communicate, etc.",
+        "Search tenants, sign rent agreements, manage documents, communicate, etc. Research scope includes but is not limited to",
       icon: "self_improvement_icon ",
       path: "/property",
     },
@@ -77,7 +79,7 @@ const Dashboard = () => {
   const statListVideos = [
     {
       src: "https://i.ibb.co/2qSmTCm/Thumnail.png",
-      title: "Creating a Property",
+      title: "Creating a Brand",
     },
     {
       src: "https://i.ibb.co/qk3CFmd/Thumnil2.png",
@@ -142,7 +144,7 @@ const Dashboard = () => {
             textAlign="center"
             sx={{ color: "#0c5389" }}
           >
-            Welcome to Tenant Owner. What do you want to do today?
+            Welcome to {/*Tenant Owner*/} GABR. What do you want to do today?
           </Typography>
 
           <Grid container justifyContent={"center"} spacing={3}>
@@ -151,8 +153,8 @@ const Dashboard = () => {
                 container
                 key={item.title}
                 item
-                md={3}
-                sm={4}
+                md={6}
+                sm={12}
                 xs={12}
                 sx={{ flex: 1 }}
               >
@@ -226,7 +228,8 @@ const Dashboard = () => {
             textAlign="center"
             sx={{ color: "#0c5389" }}
           >
-            Explore our system and its workings
+            
+
           </Typography>
           <Box sx={{ my: 2 }}>
             <Grid container spacing={3} justifyContent="center">
