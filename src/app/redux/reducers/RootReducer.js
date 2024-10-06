@@ -14,6 +14,9 @@ import FAQReducer from "./FAQReducer";
 import SupportCenterReducer from "./SupportCenterReducer";
 import { scrollReducer } from "./ScrollReducer";
 
+import brandSpecificReducer from "./BrandSpecificReducers";
+
+
 const RootReducer = combineReducers({
   scroll: scrollReducer,
   notifications: NotificationReducer,
@@ -29,6 +32,8 @@ const RootReducer = combineReducers({
   loadingAndError: loadingAndErrorReducer,
   faq: FAQReducer,
   supportCenter: SupportCenterReducer,
+  
+  brandSpecific: brandSpecificReducer,
 });
 
 export default RootReducer;

@@ -227,7 +227,7 @@ const Layout1Topbar = () => {
           <Tab
             label={
               <span style={index === 1 ? { color: "#1565c0" } : {}}>
-                My properties
+                My {/*Propertys*/} Brands
               </span>
             }
             component={Link}
@@ -293,13 +293,13 @@ const Layout1Topbar = () => {
             </StyledItem>
             <StyledItem onClick={() => navigate("/property")}>
               <Icon>holiday_village</Icon>
-              <Span> My Properties </Span>
+              <Span> My {/*Propertys*/} Brands</Span>
             </StyledItem>
             <StyledItem
               onClick={() => navigate("/property/addNewPropertyListing")}
             >
               <Icon>add_home</Icon>
-              <Span> Add New Property </Span>
+              <Span> Add New {/*Property*/} Brand</Span>
             </StyledItem>
             {/* <StyledItem onClick={() => navigate("/property/searchProperties")}>
               <Icon>travel_explore</Icon>

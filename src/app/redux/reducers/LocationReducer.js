@@ -4,6 +4,7 @@ import {
   GET_ALL_CITIES,
   GET_ALL_STATES,
   SET_CURRENT_USER_LOCATION,
+  GET_ALL_COUNTRIES,
 } from "../actions/LocationActions";
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
   cities: null,
   city: null,
   currentLocation: null,
+  countries: null,
 };
 
 const LocationReducer = function (state = initialState, action) {
@@ -31,7 +33,9 @@ const LocationReducer = function (state = initialState, action) {
     case SET_CURRENT_USER_LOCATION: {
       return { ...state, currentLocation: action.payload };
     }
-
+    case GET_ALL_COUNTRIES: {
+      return {...state, countries: action.payload.Payload}
+    }
     default: {
       return { ...state };
     }

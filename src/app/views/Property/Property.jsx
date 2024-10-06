@@ -107,6 +107,11 @@ import ViewRentReceiptModal from "./components/ViewRentReceiptModal";
 import PayMonthlyRentModal from "./components/PayMonthlyRentModal";
 import ViewAllRentalReceipts from "./components/ViewAllRentalReceipts";
 import PayMonthlyRentReciptModal from "./components/PayMonthlyRentReciptModal";
+import { testApiAction } from "app/redux/actions/TestApiActions";
+import { fetchMyBrandAction } from "app/redux/actions/BrandSpecificActions";
+import AddNewBrand from "./AddNewBrand";
+import GenerateBrandResearch from "./GenerateBrandResearch";
+import IndustryPage from "./IndustryReportSegments";
 
 const Property = () => {
   const routeLocation = useLocation();
@@ -163,6 +168,22 @@ const Property = () => {
   // }));
 
   // const classes = useStyles();
+
+  useEffect(() => {
+    dispatch(fetchMyBrandAction({
+      authentication_params: {
+        user_profile_id: preloginState.userProfileId,
+        refresh_token: preloginState.refreshToken,
+      },
+      // setBrandTypes(brandSpecific.brands.brands)
+    }));
+
+  }, [])
+  const { brands } = useSelector(state => state.brandSpecific);
+  const [adding, setAdding] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  // const [industryReport, setIndustryReport] = useState(true);
+  // console.log(brands)
 
   const isIntoView = useRef([
     {
@@ -353,6 +374,9 @@ const Property = () => {
       return null;
     })[propertyIndex];
   };
+  const [BrandTypes, setBrandTypes] = useState([
+  ]);
+
   useEffect(() => {
     dispatch(
       fetchMyPropertyAction({
@@ -578,15 +602,8 @@ const Property = () => {
     }
   }, [notification, individualProperty]);
 
-  const PartyTypes = [
-    { id: 0, type: "All" },
-    { id: 1, type: "Owner" },
-    { id: 2, type: "Tenant" },
-    { id: 3, type: "Agency" },
-    { id: 4, type: "Agent Member" },
-    { id: 5, type: "Agent-Witness" },
-    { id: 6, type: "Witness" },
-  ];
+  // replace this Party types with data comming from backend
+
   const handleSubmit = () => {
     dispatch(setCreateNewTenancyModal(true));
     dispatch(
@@ -710,7 +727,8 @@ const Property = () => {
                     variant="contained"
                     color="primary"
                     onClick={() => {
-                      navigate("/property/addNewPropertyListing");
+                      // navigate("/property/addNewPropertyListing");
+                      setAdding(true);
                     }}
                     sx={(themes) => ({
                       [themes.breakpoints.down("md")]: {
@@ -719,14 +737,14 @@ const Property = () => {
                       },
                     })}
                   >
-                    Add New Property
+                    Add New Brand
                   </Button>
 
                   <TextField
                     select
                     sx={{ mr: 1 }}
                     // name="propertyType"
-                    label="Filter Properties"
+                    label="My Brands" //Filter Properties
                     variant="outlined"
                     size="small"
                     fullWidth
@@ -739,28 +757,63 @@ const Property = () => {
                       //deselect any selected property
                       setSortedMyProperties((prevState) => {
                         return prevState?.map((state) => {
+                          console.log(state);
                           return { ...state, isSelected: false };
+
                         });
                       });
                       setFilteredType(e.target.value);
                     }}
-                    // onChange={(e) => {
-                    //   // handleChange(e);
-                    //   setFieldValue("propertyType", e.target.value);
-                    // }}
-                    //   onBlur={handleBlur}
-                    //   helperText={touched.propertyType && errors.propertyType}
-                    //   error={Boolean(
-                    //     touched.propertyType && errors.propertyType
-                    //   )}
+                  // onChange={(e) => {
+                  //   // handleChange(e);
+                  //   setFieldValue("propertyType", e.target.value);
+                  // }}
+                  //   onBlur={handleBlur}
+                  //   helperText={touched.propertyType && errors.propertyType}
+                  //   error={Boolean(
+                  //     touched.propertyType && errors.propertyType
+                  //   )}
                   >
-                    {PartyTypes.map((item) => (
-                      <MenuItem key={item.id} value={item.type}>
-                        {item.type}
+                    {brands?.brands?.map((item) => (
+                      <MenuItem key={item.segment} value={item.details}>
+                        {item.details}
                       </MenuItem>
                     ))}
                   </TextField>
-                  {FETCH_MY_PROPERTY?.isLoading === true ? (
+                  <Button
+                    fullWidth
+                    color="inherit"
+                    // onClick={() => {
+                    //   // Navigate to Dashboard
+                    //   navigate("/dashboard");
+                    // }}
+                  >
+                    Dashboard
+                  </Button>
+
+                  <Button
+                    fullWidth
+                    color="inherit"
+                    // onClick={() => {
+                    //   // Navigate to Industry Report
+                    //   navigate("/industry-report");
+                    // }}
+                  >
+                    Industry Report
+                  </Button>
+
+                  <Button
+                    fullWidth
+                    color="inherit"
+                    // onClick={() => {
+                    //   // Navigate to Business Plan
+                    //   navigate("/business-plan");
+                    // }}
+                  >
+                    Business Plan
+                  </Button>
+
+                  {/* {FETCH_MY_PROPERTY?.isLoading === true ? (
                     <Box
                       height="100vh"
                       sx={{
@@ -770,9 +823,9 @@ const Property = () => {
                     >
                       <Loading />
                     </Box>
-                  ) : (
-                    <>
-                      {/* {sortedMyProperties &&
+                  ) : ( */}
+                  {/* <> */}
+                  {/* {sortedMyProperties &&
                         sortedMyProperties.map((item, index) => (
                           <Box
                             key={item.property_id}
@@ -795,7 +848,7 @@ const Property = () => {
                             <PropertyItem props={item} />
                           </Box>
                         ))} */}
-                      {filteredMyProperties &&
+                  {/* {filteredMyProperties &&
                         filteredMyProperties.map((item, index) => (
                           <Box
                             key={item.property_id}
@@ -819,12 +872,12 @@ const Property = () => {
                           </Box>
                         ))}
                     </>
-                  )}
+                  )} */}
                 </Paper>
               </Box>
             </Grid>
             {/* If user didn't clicked on any listed property */}
-            {!individualProperty ? (
+            {/* {!individualProperty ? (
               GET_INDIVIDUAL_PROPERTY?.isLoading === true ? (
                 <Grid
                   item
@@ -836,48 +889,63 @@ const Property = () => {
                 >
                   <Loading />
                 </Grid>
-              ) : (
-                <Grid item md={9} sm={12}>
-                  <Card
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      alginItems: "center",
-                      padding: 2,
-                      margin: "0 auto",
-                    }}
-                  >
-                    <Typography
-                      variant="h5"
-                      textAlign={"center"}
-                      color="GrayText"
-                    >
-                      Please select a property from the left menu!
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      textAlign={"center"}
-                      color="GrayText"
-                    >
-                      OR
-                    </Typography>
+              ) : ( */}
+            <Grid item md={9} sm={12}>
+              {!adding && !generating && <Card
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alginItems: "center",
+                  padding: 2,
+                  margin: "0 auto",
+                }}
+              >
+                <Typography
+                  variant="h5"
+                  textAlign={"center"}
+                  color="GrayText"
+                >
+                  Please select a brand from the left menu!
+                </Typography>
+                <Typography
+                  variant="h5"
+                  textAlign={"center"}
+                  color="GrayText"
+                >
+                  {/* OR */}
+                </Typography>
 
-                    <Typography
-                      variant="h5"
-                      textAlign={"center"}
-                      color="GrayText"
-                    >
-                      <Link
-                        href="/property/addNewPropertyListing"
-                        underline="none"
-                      >
-                        Please add a new property to begin!
-                      </Link>
-                    </Typography>
-                  </Card>
-                </Grid>
-              )
+                <Typography
+                  variant="h5"
+                  textAlign={"center"}
+                  color="GrayText"
+                >
+                  <Link
+                    href="/property/addNewPropertyListing"
+                    underline="none"
+                  >
+                    {/* Please add a new Brand to begin! */}
+                  </Link>
+                </Typography>
+              </Card>}
+              <Card>
+                {
+                  adding && <AddNewBrand setAdding={setAdding} setGenerating={setGenerating} />
+                }
+              </Card>
+              <Card>
+                {generating &&
+                  <GenerateBrandResearch />
+                }
+              </Card>
+              {/* <Card>
+                {industryReport &&
+                  <IndustryPage />
+                }
+              </Card> */}
+            </Grid>
+            {/* )
             ) : (
               !(partyStatusId === 1 || partyStatusId === 2) && (
                 <>
@@ -887,8 +955,8 @@ const Property = () => {
                     </Grid>
                   ) : (
                     <>
-                      <Grid item md={6} sm={12}>
-                        {/* <Paper sx={{ p: 2 }}>
+                      <Grid item md={6} sm={12}> */}
+            {/* <Paper sx={{ p: 2 }}>
                                      <Box>
                                          <Stepper
                                              activeStep={progress}
@@ -920,11 +988,11 @@ const Property = () => {
                                      </Box>
                                  </Paper> */}
 
-                        <>
-                          <ViewPropertyBasicDetails />
+            {/* <>
+                          <ViewPropertyBasicDetails /> */}
 
-                          {/* Commented Listing Details for Phase 1 */}
-                          {/* <Divider
+            {/* Commented Listing Details for Phase 1 */}
+            {/* <Divider
                             sx={{
                               marginTop: "20px",
                             }}
@@ -966,7 +1034,7 @@ const Property = () => {
                               <ListingPerformance />
                             </>
                           )} */}
-                          <Divider
+            {/* <Divider
                             sx={{
                               marginTop: "20px",
                             }}
@@ -1150,22 +1218,22 @@ const Property = () => {
                               flexDirection: "column",
                               alignItems: "flex-start",
                             }}
-                          >
-                            {
-                              getSelectedPropertyItem()
-                              // sortedMyProperties?.some(
-                              //     (sortedProperty) => sortedProperty.isSelected === true)
-                              // &&
-                              // <PropertyItem
-                              //     props={sortedMyProperties?.filter(
-                              //         (sortedProperty) => sortedProperty.isSelected === true)[0]}
-                              //     setPartyStatusIdRef={
-                              //         setPartyStatusIdRef
-                              //     }
-                              // ></PropertyItem>
-                            }
-                            {/* Commented the below code for Phase 1 */}
-                            {/* {individualProperty?.listing_details?.listing_images
+                          > */}
+            {
+              //getSelectedPropertyItem()
+              // sortedMyProperties?.some(
+              //     (sortedProperty) => sortedProperty.isSelected === true)
+              // &&
+              // <PropertyItem
+              //     props={sortedMyProperties?.filter(
+              //         (sortedProperty) => sortedProperty.isSelected === true)[0]}
+              //     setPartyStatusIdRef={
+              //         setPartyStatusIdRef
+              //     }
+              // ></PropertyItem>
+            }
+            {/* Commented the below code for Phase 1 */}
+            {/* {individualProperty?.listing_details?.listing_images
                               ?.length === 0 ? (
                               <Typography
                                 variant="body2"
@@ -1198,7 +1266,7 @@ const Property = () => {
                               </Typography>
                             )} */}
 
-                            <Typography
+            {/* <Typography
                               variant="body2"
                               sx={(theme) => ({
                                 color: "#fff",
@@ -1238,16 +1306,16 @@ const Property = () => {
                                 >
                                   Pay Rent
                                 </Typography>
-                              )}
+                              )} */}
 
-                            {/* <Typography
+            {/* <Typography
                               variant="h6"
                               color="initial"
                               marginTop={3}
                             >
                               Current Listing Details
                             </Typography> */}
-                            <Typography
+            {/* <Typography
                               variant="h6"
                               color="initial"
                               marginTop={3}
@@ -1450,9 +1518,9 @@ const Property = () => {
                               }}
                             >
                               Basic Details
-                            </Button>
-                            {/* Commented the below code for Phase 1 */}
-                            {/* <Button
+                            </Button> */}
+            {/* Commented the below code for Phase 1 */}
+            {/* <Button
                               id="listingDetailsBtn"
                               onClick={() => handleScroll("#listingDetails")}
                               color="primary"
@@ -1532,7 +1600,7 @@ const Property = () => {
                                 </Button>
                               </>
                             )}*/}
-                          </Box>
+            {/* </Box>
                           <Box
                             sx={{
                               my: 4,
@@ -1653,8 +1721,8 @@ const Property = () => {
                               flexDirection: "column",
                               alignItems: "flex-start",
                             }}
-                          >
-                            {/* <Typography variant="h6" color="initial">
+                          > */}
+            {/* <Typography variant="h6" color="initial">
                               Past Listings
                             </Typography>
 
@@ -1668,7 +1736,7 @@ const Property = () => {
                             >
                               Address 2
                             </Button> */}
-                          </Box>
+            {/* </Box>
                           <Box
                             sx={{
                               my: 4,
@@ -1701,8 +1769,8 @@ const Property = () => {
                     </>
                   )}
                 </>
-              )
-            )}
+              ) 
+            ){/*}*/}
           </Grid>
         </Container>
       </>
