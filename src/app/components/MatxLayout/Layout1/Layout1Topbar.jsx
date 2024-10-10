@@ -227,7 +227,7 @@ const Layout1Topbar = () => {
           <Tab
             label={
               <span style={index === 1 ? { color: "#1565c0" } : {}}>
-                My {/*Propertys*/} Brands
+                BRAND SPECIFIC
               </span>
             }
             component={Link}
@@ -263,7 +263,7 @@ const Layout1Topbar = () => {
           <Tab
             label={
               <span style={index === 2 ? { color: "#1565c0" } : {}}>
-                My invitations
+                BRAND AGNOSTIC
               </span>
             }
             component={Link}

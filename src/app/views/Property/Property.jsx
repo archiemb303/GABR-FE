@@ -107,11 +107,12 @@ import ViewRentReceiptModal from "./components/ViewRentReceiptModal";
 import PayMonthlyRentModal from "./components/PayMonthlyRentModal";
 import ViewAllRentalReceipts from "./components/ViewAllRentalReceipts";
 import PayMonthlyRentReciptModal from "./components/PayMonthlyRentReciptModal";
-import { testApiAction } from "app/redux/actions/TestApiActions";
+
 import { fetchMyBrandAction } from "app/redux/actions/BrandSpecificActions";
 import AddNewBrand from "./AddNewBrand";
 import GenerateBrandResearch from "./GenerateBrandResearch";
 import IndustryPage from "./IndustryReportSegments";
+import BrandDetailsPage from "./BrandDetails";
 
 const Property = () => {
   const routeLocation = useLocation();
@@ -180,9 +181,15 @@ const Property = () => {
 
   }, [])
   const { brands } = useSelector(state => state.brandSpecific);
-  const [adding, setAdding] = useState(false);
+  const [adding, setAdding] = useState(true);
   const [generating, setGenerating] = useState(false);
-  // const [industryReport, setIndustryReport] = useState(true);
+  const [industryReport, setIndustryReport] = useState(false);
+  const [brandDetails, setBrandDetails] = useState(false);
+  const [selectedBrandSegment, setSelectedBrandSegment] = useState(null);
+  const [displayMenu, setDisplayMenu] = useState(false)
+  const handleBrandSelection = (e) => {
+    setSelectedBrandSegment(e.target.value); // Set the selected segment id
+  };
   // console.log(brands)
 
   const isIntoView = useRef([
@@ -729,6 +736,9 @@ const Property = () => {
                     onClick={() => {
                       // navigate("/property/addNewPropertyListing");
                       setAdding(true);
+                      setBrandDetails(false);
+                      setIndustryReport(false);
+                      setDisplayMenu(false)
                     }}
                     sx={(themes) => ({
                       [themes.breakpoints.down("md")]: {
@@ -761,8 +771,13 @@ const Property = () => {
                           return { ...state, isSelected: false };
 
                         });
+
                       });
                       setFilteredType(e.target.value);
+                      setBrandDetails(true);
+                      handleBrandSelection(e);
+                      setDisplayMenu(true);
+                      setAdding(false);
                     }}
                   // onChange={(e) => {
                   //   // handleChange(e);
@@ -775,43 +790,47 @@ const Property = () => {
                   //   )}
                   >
                     {brands?.brands?.map((item) => (
-                      <MenuItem key={item.segment} value={item.details}>
+                      <MenuItem key={item.segment} value={item.segment}>
                         {item.details}
                       </MenuItem>
                     ))}
                   </TextField>
-                  <Button
-                    fullWidth
-                    color="inherit"
-                    // onClick={() => {
-                    //   // Navigate to Dashboard
-                    //   navigate("/dashboard");
-                    // }}
-                  >
-                    Dashboard
-                  </Button>
+                  {displayMenu && <Box>
+                    <Button
+                      fullWidth
+                      color="inherit"
+                      onClick={() => {
+                        setAdding(false);
+                        setGenerating(false);
+                        setIndustryReport(false);
+                        setBrandDetails(true);
+                      }}
+                    >
+                      Dashboard
+                    </Button>
 
-                  <Button
-                    fullWidth
-                    color="inherit"
-                    // onClick={() => {
-                    //   // Navigate to Industry Report
-                    //   navigate("/industry-report");
-                    // }}
-                  >
-                    Industry Report
-                  </Button>
+                    <Button
+                      fullWidth
+                      color="inherit"
+                      onClick={() => {
+                        setIndustryReport(true);
+                        setBrandDetails(false);
+                      }}
+                    >
+                      Industry Report
+                    </Button>
 
-                  <Button
-                    fullWidth
-                    color="inherit"
+                    <Button
+                      fullWidth
+                      color="inherit"
                     // onClick={() => {
                     //   // Navigate to Business Plan
                     //   navigate("/business-plan");
                     // }}
-                  >
-                    Business Plan
-                  </Button>
+                    >
+                      Business Plan
+                    </Button>
+                  </Box>}
 
                   {/* {FETCH_MY_PROPERTY?.isLoading === true ? (
                     <Box
@@ -891,44 +910,52 @@ const Property = () => {
                 </Grid>
               ) : ( */}
             <Grid item md={9} sm={12}>
-              {!adding && !generating && <Card
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alginItems: "center",
-                  padding: 2,
-                  margin: "0 auto",
-                }}
-              >
-                <Typography
-                  variant="h5"
-                  textAlign={"center"}
-                  color="GrayText"
+              {!adding && !generating && !industryReport && !brandDetails &&
+                <Card
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alginItems: "center",
+                    padding: 2,
+                    margin: "0 auto",
+                  }}
                 >
-                  Please select a brand from the left menu!
-                </Typography>
-                <Typography
-                  variant="h5"
-                  textAlign={"center"}
-                  color="GrayText"
-                >
-                  {/* OR */}
-                </Typography>
-
-                <Typography
-                  variant="h5"
-                  textAlign={"center"}
-                  color="GrayText"
-                >
-                  <Link
-                    href="/property/addNewPropertyListing"
-                    underline="none"
+                  <Typography
+                    variant="h5"
+                    textAlign={"center"}
+                    color="GrayText"
                   >
-                    {/* Please add a new Brand to begin! */}
-                  </Link>
-                </Typography>
-              </Card>}
+                    {/* Please select a brand from the left menu! */}
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    textAlign={"center"}
+                    color="GrayText"
+                  >
+                    {/* OR */}
+                  </Typography>
+
+                  <Typography
+                    variant="h5"
+                    textAlign={"center"}
+                    color="GrayText"
+                  >
+                    <Link
+                      href="/property/addNewPropertyListing"
+                      underline="none"
+                    >
+                      {/* Please add a new Brand to begin! */}
+                    </Link>
+                  </Typography>
+                </Card>}
+              <Card>{
+                brandDetails && <BrandDetailsPage
+                  segment={selectedBrandSegment}
+                  setIndustryReport={setIndustryReport}
+                  setBrandDetails={setBrandDetails} />
+              }
+              </Card>
               <Card>
                 {
                   adding && <AddNewBrand setAdding={setAdding} setGenerating={setGenerating} />
@@ -936,14 +963,14 @@ const Property = () => {
               </Card>
               <Card>
                 {generating &&
-                  <GenerateBrandResearch />
+                  <GenerateBrandResearch setBrandDetails={setBrandDetails} setGenerating={setGenerating} setDisplayMenu={setDisplayMenu} />
                 }
               </Card>
-              {/* <Card>
+              <Card>
                 {industryReport &&
                   <IndustryPage />
                 }
-              </Card> */}
+              </Card>
             </Grid>
             {/* )
             ) : (
