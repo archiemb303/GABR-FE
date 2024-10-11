@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllCountriesAction } from "app/redux/actions/LocationActions";
 import { generateUnderstanding } from "app/redux/actions/BrandSpecificActions";
 
-const AddNewBrand = ({setAdding, setGenerating}) => {
+const AddNewBrand = ({ setAdding, setGenerating }) => {
     const dispatch = useDispatch();
     const params = { text: "This is demo text" }
     const initialValues = {
@@ -20,7 +20,7 @@ const AddNewBrand = ({setAdding, setGenerating}) => {
         description: "",
     }
     const [open, setOpen] = useState(false);
-    
+
     const handleSubmit = async (values) => {
         console.log(values)
         dispatch(
@@ -36,20 +36,20 @@ const AddNewBrand = ({setAdding, setGenerating}) => {
             })
         );
     }
-     
+
     // Function to open the modal
     const handleClickOpen = () => {
         setOpen(true);
-      };
-    
-      // Function to close the modal
-      const handleClose = () => {
+    };
+
+    // Function to close the modal
+    const handleClose = () => {
         setOpen(false);
-      };
-    const { nature_of_business} = useSelector(state => state.brandSpecific);
-    const { location } = useSelector(state=>state);
+    };
+    const { nature_of_business } = useSelector(state => state.brandSpecific);
+    const { location } = useSelector(state => state);
     useEffect(() => {
-        
+
         dispatch(fetchBusinessNature())
         dispatch(getAllCountriesAction());
     }, [])
@@ -61,11 +61,30 @@ const AddNewBrand = ({setAdding, setGenerating}) => {
             <Typography
                 variant="h5"
                 color="initial"
-                my={4}
+                my={1}
                 textAlign="center"
                 sx={{ color: "#0c5389" }}
             >
-                Let's start by adding a few details about your Brand
+                Please select a brand from the left menu
+            </Typography>
+            <Typography
+                variant="h5"
+                color="initial"
+                my={1}
+                textAlign="center"
+                sx={{ color: "#0c5389" }}
+            >
+                OR
+            </Typography>
+            <Typography
+                variant="h5"
+                color="initial"
+                my={1}
+                textAlign="center"
+                sx={{ color: "#0c5389" }}
+            >
+
+                Create a new brand by filling the below form
             </Typography>
             <Card
                 sx={{

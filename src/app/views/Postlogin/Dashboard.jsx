@@ -28,7 +28,7 @@ import DashboardVideoModal from "./DashboardVideoModal";
 import { setDashboardVideoModal } from "app/redux/actions/ModalActions";
 import { height } from "@mui/system";
 import Loading from "app/components/MatxLoading";
-import { testApiAction } from "app/redux/actions/TestApiActions";
+
 import { async } from "@firebase/util";
 
 const Dashboard = () => {
@@ -68,9 +68,9 @@ const Dashboard = () => {
       path: "/property",
     },
     {
-      title: "Manage My Brands",
+      title: " Brand Agnostic Industry Research Portal",
       description:
-        "Search tenants, sign rent agreements, manage documents, communicate, etc. Research scope includes but is not limited to",
+        "For companies, investors, and researchers who want to do overall industry research not particular to any offerings. Such reports help identifying latest trends, different types of offerings, scope and growth of industries, etc",
       icon: "self_improvement_icon ",
       path: "/property",
     },
@@ -144,7 +144,7 @@ const Dashboard = () => {
             textAlign="center"
             sx={{ color: "#0c5389" }}
           >
-            Welcome to {/*Tenant Owner*/} GABR. What do you want to do today?
+            Welcome to GABR. What do you want to do today?
           </Typography>
 
           <Grid container justifyContent={"center"} spacing={3}>
@@ -221,7 +221,7 @@ const Dashboard = () => {
             ))}
           </Grid>
 
-          <Typography
+          {/* <Typography
             variant="h5"
             color="initial"
             mt={8}
@@ -231,6 +231,7 @@ const Dashboard = () => {
             
 
           </Typography>
+
           <Box sx={{ my: 2 }}>
             <Grid container spacing={3} justifyContent="center">
               {statListVideos.map((item, i) => (
@@ -278,7 +279,7 @@ const Dashboard = () => {
                 </Grid>
               ))}
             </Grid>
-          </Box>
+          </Box> */}
         </Container>
       )}
     </>
