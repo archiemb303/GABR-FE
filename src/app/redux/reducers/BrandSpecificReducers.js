@@ -7,7 +7,7 @@ const initialState = {
 const brandSpecificReducer = function (state = initialState, action) {
     switch (action.type) {
       case CREATE_FORM: {
-        return { ...state, ...action.payload.Payload };
+        return { ...state, nature_of_business:action.payload.Payload };
       }
       case FETCH_MY_BRAND: {
         return {
@@ -20,7 +20,7 @@ const brandSpecificReducer = function (state = initialState, action) {
         return {...state, dummyData: action.payload.Payload}
       }
       case CREATE_BRAND: {
-        return {...state, messagee: action.payload.Payload}
+        return {...state, message: action.payload.Payload}
       }
       default: {
         return { ...state };

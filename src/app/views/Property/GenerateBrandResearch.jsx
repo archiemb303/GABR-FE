@@ -6,7 +6,7 @@ const GenerateBrandResearch = ({ setBrandDetails, setGenerating, setDisplayMenu 
     const dispatch = useDispatch();
 
     const { brandSpecific } = useSelector((state) => state);
-    const { dummyData } = useSelector(state => state.brandSpecific);
+    const { message } = useSelector(state => state.brandSpecific);
     console.log(brandSpecific);
 
     const [openRegenerate, setOpenRegenerate] = useState(false); // State to manage regenerate text box
@@ -52,7 +52,7 @@ const GenerateBrandResearch = ({ setBrandDetails, setGenerating, setDisplayMenu 
                     borderRadius: "8px",
                 }}
             >
-                {dummyData?.Business_understanding}
+                {message?.brand_understanding}
             </Typography>
             <Card
                 sx={{
