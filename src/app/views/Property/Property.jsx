@@ -180,6 +180,8 @@ const Property = () => {
     }));
 
   }, [])
+  const {brandSpecific} = useSelector(state=> state);
+  console.log(brandSpecific)
   const { brands } = useSelector(state => state.brandSpecific);
   const [adding, setAdding] = useState(true);
   const [generating, setGenerating] = useState(false);
